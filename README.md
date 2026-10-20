@@ -17,9 +17,21 @@ Implementation of a basic 3D interactive scene featuring custom geometry, lighti
 
 ---
 
-### Screenshot
+## Lab 2: Particle System (Chimney Smoke)
 
-<img width="778" height="587" alt="image" src="https://github.com/user-attachments/assets/69a0206d-39f8-477e-aadf-e9ce13de575e" />
+Implementation of a billboarded particle system simulating chimney smoke with physical behavior, environmental wind forces, and frame-rate independent updates.
+
+### Features
+* **Smoke Emitter & Billboarding:** Integrated `SmokeEmitter` mapped directly to the chimney coordinates, ensuring camera-facing textured particle quads.
+* **Lifecycle & Dissipation:** Particle transparency modulated by remaining energy (`alpha = energy * 0.4`), random jitter for turbulence, and vertical cone-shaped expansion.
+* **Weather & Wind Forces:** Real-time smoke deflection reacting dynamically to 3D directional wind vectors supplied by the `Weather` class.
+* **Dynamic Particle Count:** Real-time particle density scaling (spawning and despawning particle batches) via keyboard controls.
+* **Frame-Rate Independence (Delta Time):** Physics and fading speeds decoupled from rendering frame rate using `Global.timeScaler` calculated via `System.nanoTime()`.
+
+---
+
+### Screenshot
+<img width="782" height="588" alt="image" src="https://github.com/user-attachments/assets/da1bfce1-45a2-4659-8e60-cfad363e9af7" />
 
 
 ---
@@ -29,13 +41,22 @@ Implementation of a basic 3D interactive scene featuring custom geometry, lighti
 | Key | Action |
 | :--- | :--- |
 | **W, S, A, D** | Move camera forward / backward / left / right |
-| **Mouse Drag** | Look around / pitch & yaw |
+| **Q, E** | Move camera down / up |
+| **Arrow Keys** | Rotate camera (pitch & yaw) |
 | **L** | Toggle orbiting light movement |
-| **1** | Switch light color to Red |
-| **2** | Switch light color to Green |
-| **3** | Switch light color to Blue |
+| **1, 2, 3** | Switch light color to Red / Green / Blue |
 | **0** | Reset light color to Default (White) |
-| **R** | Toggle Wireframe / Solid render mode |
+| **Numpad 8 / 2** | Move light along Z-axis |
+| **Numpad 4 / 6** | Move light along X-axis |
+| **Page Up / Page Down** | Move light along Y-axis |
+| **Z, X** | Adjust wind along X-axis (left / right) |
+| **C, V** | Adjust wind along Z-axis (forward / backward) |
+| **B, N** | Adjust wind along Y-axis (up / down) |
+| **K / J** | Add / remove smoke particles |
+| **F1** | Toggle FPS counter |
+| **R** | Toggle Points / Wireframe / Solid render mode |
+| **P** | Toggle post-processing shaders |
+| **ESC** | Exit application |
 
 ---
 
