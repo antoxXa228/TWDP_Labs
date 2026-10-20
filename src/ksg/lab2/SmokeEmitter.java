@@ -162,6 +162,32 @@ public class SmokeEmitter extends GameObject
             texture.disable(gl);
         }
     }
+    // Zadanie 4: dynamiczna zmiana liczby cząsteczek
+    public void addParticles(int count)
+    {
+        Random rand = new Random();
+        for (int i = 0; i < count; i++)
+        {
+            double angle = rand.nextDouble() * 2.0 * Math.PI;
+            Vector3 pos = generateRandomPosition(angle, rand);
+            SmokeParticle particle = new SmokeParticle(new Vector3(pos.x, pos.y, pos.z), texture, new Colour(0.5f, 0.5f, 0.5f, 1.0f));
+            resetParticle(particle, rand);
+            particles.add(particle);
+        }
+    }
+
+    public void removeParticles(int count)
+    {
+        for (int i = 0; i < count && !particles.isEmpty(); i++)
+        {
+            particles.remove(particles.size() - 1);
+        }
+    }
+
+//    public int getParticleCount()
+//    {
+//        return particles.size();
+//    }
 
     public float getRadius()
     {

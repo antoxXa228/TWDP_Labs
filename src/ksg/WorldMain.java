@@ -1,6 +1,9 @@
 package ksg;
 
+import ksg.common.*;
 import ksg.lab2.Weather;
+import ksg.lab2.SmokeEmitter;
+import ksg.lab2.Global;
 import ksg.lab1.GroundRetro;
 import com.jogamp.newt.Window;
 import com.jogamp.newt.event.KeyAdapter;
@@ -34,12 +37,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import ksg.common.Colour;
-import ksg.common.FPSCounter;
+
 import ksg.lab3.ShaderLocations;
 import ksg.lab3.ShaderTool;
-import ksg.common.Camera;
-import ksg.common.GameObject;
 import ksg.lab1.GroundVbo;
 import ksg.lab1.House;
 import ksg.lab1.Light;
@@ -68,7 +68,8 @@ public class WorldMain implements GLEventListener
     protected float promien = 150.0f;          // promień
     protected float x0 = 0.0f;                 // x0
     protected float y0 = 0.0f;                 // y0
-    
+
+    protected SmokeEmitter smokeEmitter;
     // Poniższe zmienne będą wytłumaczone podczas laboratorium 3.
     protected FBObject frameBuffer=null, textureBuffer=null; // bufory przechowujące zawartość sceny
     protected ShaderLocations postProcessingShaders; // shadery nakładane na cały ekran
@@ -176,6 +177,10 @@ public class WorldMain implements GLEventListener
             // vboMesh.generateBuffers(gl);
             // objects.add( vboMesh );
             objects.add( new GroundRetro(0, -150, -500, textures.get(1), displacementMap) );
+            // zadanie 1, 4
+            smokeEmitter = new SmokeEmitter(new Vector3(-85.0f, 180.0f, 541.0f), 10.0f, 60, textures.get(2));
+            objects.add(smokeEmitter);
+
         }
         catch (IOException | GLException e)
         {
@@ -280,6 +285,11 @@ public class WorldMain implements GLEventListener
     @Override
     public void display(GLAutoDrawable drawable) // metoda renderująca aktualną klatkę
     {
+        currentTime = System.nanoTime();
+        Global.timeScaler = (currentTime - previousTime) * 0.00000006;
+        previousTime = currentTime;
+
+
         GL2 gl = drawable.getGL().getGL2();
         // Weryfikacja czy włączone jest krążenie światła
         if (isLightCircling && light != null)
@@ -382,8 +392,8 @@ public class WorldMain implements GLEventListener
             fps.draw();
         }
         
-        currentTime = System.nanoTime();
-        previousTime = currentTime;
+//        currentTime = System.nanoTime();
+//        previousTime = currentTime;
     }
 
     // Metoda wywoływana przy każdym przeskalowaniu okna.
@@ -623,6 +633,22 @@ public class WorldMain implements GLEventListener
             {
                 isLightCircling = !isLightCircling;
             }
+
+            // zmiana liczby cząsteczek dymu
+            if (kc == KeyEvent.VK_K)
+            {
+                if (smokeEmitter != null)
+                {
+                    smokeEmitter.addParticles(20);
+                }
+            }
+            else if (kc == KeyEvent.VK_J)
+            {
+                if (smokeEmitter != null)
+                {
+                    smokeEmitter.removeParticles(20);
+                }
+            }
             if (kc == KeyEvent.VK_1)
             {
                 // Czerwone światło
@@ -685,7 +711,7 @@ public class WorldMain implements GLEventListener
         world.frame = frame;
 
         // Ustawienie automatycznego rysowania sceny na maksymalnie 70 razy na sekundę (max 70 FPS).
-        final FPSAnimator animator = new FPSAnimator(70, false);
+        final FPSAnimator animator = new FPSAnimator(130, false);
         
         frame.addWindowListener(new java.awt.event.WindowAdapter()
         {
